@@ -12,6 +12,7 @@ In our versions manifest, we specify ``runtimeVersion`` for every version. If th
 
 ## Documentation
 
+### Init
 ``new autoUpdater(options)`` - inits an instance of our auto-updater
 
 ### Options
@@ -45,11 +46,13 @@ Your versions manifest is a JSON file of array with objects describing each rele
 ]
 ```
 
+The required properties are ``version``, ``runtimeVersion`` and ``released``. Other than that, you can add any property you want for use in your ``filter`` function.
+
 ### Methods 
 
-``autoupdater.check(cb)``
+``autoupdater.check(cb)`` - checks for new versions
 
-``autoupdater.prepare(options, cb)``
+``autoupdater.prepare(options, cb)`` - prepares a new version
 
 
 ## Difference to Squirrel, Electron's default auto-updater
