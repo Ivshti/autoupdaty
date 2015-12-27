@@ -1,0 +1,26 @@
+{
+  "name": "autoupdaty",
+  "version": "1.0.0",
+  "description": "Autoupdater for Electron/NW.js apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ivshti/autoupdaty"
+  },
+  "keywords": [
+    "autoupdater",
+    "electron.nw.js"
+  ],
+  "author": "Ivo Georgiev <ivo@linvo.com> (http://ivogeorgiev.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ivshti/autoupdaty/issues"
+  },
+  "homepage": "https://github.com/Ivshti/autoupdaty",
+  "dependencies": {
+    "needle": "^0.11.0"
+  }
+}
