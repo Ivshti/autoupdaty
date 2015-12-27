@@ -23,7 +23,9 @@ In our versions manifest, we specify ``runtimeVersion`` for every version. If th
 { version: "2.1", runtimeVersion: "2.0", released: "Sun Dec 27 2015 18:41:58 GMT+0200 (EET)" }
 ```
 
-``manifest`` - URL to .json of your versions manifest
+``manifestUrl`` - URL to .json of your versions manifest
+
+``downloadUrl`` - base URL of your download server
 
 ``filter`` - filter function ran against every version from the manifest
 
@@ -31,6 +33,8 @@ In our versions manifest, we specify ``runtimeVersion`` for every version. If th
 ```javascript
 function(ver) { return !ver.isBeta }
 ```
+
+``getUpdateUrl`` - function to format the URL we get the new version from; arguments are ``getUpdateUrl(downloadUrl, isAsar, platform)``
 
 ``runtimeVersionProp`` - property to use when parsing runtime version from the versions manifest; default is ``runtimeVersion``
 
