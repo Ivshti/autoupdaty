@@ -23,7 +23,7 @@ In our versions manifest, we specify ``runtimeVersion`` for every version. If th
 { version: "2.1", runtimeVersion: "2.0", released: "Sun Dec 27 2015 18:41:58 GMT+0200 (EET)" }
 ```
 
-``manifestUrl`` - URL to .json of your versions manifest
+``manifestUrl`` - URL to .json of your versions manifest; could be an array of URLs if you want fallback(s)
 
 ``downloadUrl`` - base URL of your download server
 
