@@ -1,4 +1,7 @@
 var needle = require('needle')
+var async = require('async')
+
+var reqOpts = { follow_max: 3, open_timeout: 5000, read_timeout: 5000 }
 
 module.exports = function autoUpdater (options) {
   options = this.options = options || { }
@@ -9,8 +12,17 @@ module.exports = function autoUpdater (options) {
   options.filter = options.filter || function (ver) { return !(ver.beta || ver.alpha || ver.experimental) && !ver.disabled }
 
   this.manifest = function (cb) {
-    needle.get(options.manifestUrl, function (err, resp, body) {
-      cb(err, body)
+    var err, body
+    var urls = Array.isArray(options.manifestUrl) ? [].concat(options.manifestUrl) : [options.manifestUrl]
+
+    async.whilst(function () { return !body && urls.length }, function (next) {
+      needle.get(urls.shift(), reqOpts, function (e, resp, b) {
+        err = e
+        body = b
+        next()
+      })
+    }, function () {
+      cb(body ? null : err, body)
     })
   }
 
