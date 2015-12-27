@@ -6,11 +6,16 @@ module.exports = function autoUpdater (options) {
   if (!options.version) throw new Error('specify current version object')
   if (!options.manifestUrl || !options.downloadUrl) throw new Error('specify manifestUrl and downloadUrl')
 
-  var filter = options.filter || function (ver) { return !(ver.beta || ver.alpha || ver.experimental) && !ver.disabled }
-  var current = options.version
+  options.filter = options.filter || function (ver) { return !(ver.beta || ver.alpha || ver.experimental) && !ver.disabled }
+
+  this.manifest = function (cb) {
+    needle.get(options.manifestUrl, function (err, resp, body) {
+      cb(err, body)
+    })
+  }
 
   this.check = function (cb) {
-    needle.get(options.manifestUrl, function (err, resp, body) {
+    this.manifest(function (err, body) {
       if (err) return cb(err)
 
       if (!Array.isArray(body)) return cb(new Error('expecting array from downloadUrl'))
@@ -18,10 +23,10 @@ module.exports = function autoUpdater (options) {
       var versions = body
         .map(function (x) { x.released = new Date(x.released); return x })
         .sort(function (b, a) { return a.released.getTime() - b.released.getTime() })
-        .filter(filter)
+        .filter(options.filter)
 
       var newest = versions[0]
-      cb(null, newest.version === current.version ? null : newest)
+      cb(null, newest.version === options.version.version ? null : newest)
     })
   }
 
