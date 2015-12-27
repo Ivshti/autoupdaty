@@ -56,7 +56,15 @@ The required properties are ``version``, ``runtimeVersion`` and ``released``. Ot
 
 ``autoupdater.check(cb)`` - checks for new versions
 
-``autoupdater.prepare(options, cb)`` - prepares a new version
+``autoupdater.prepare(version, cb)`` - prepares a new version
+
+This downloads the new version. 
+
+If our current version has the same runtime, it will only download the ``.asar`` file. 
+
+If the update URL to the ASAR file ends in ``.gz`` (as the default ``getUpdateUrl`` assumes), then we'll un-gzip it on download and save it without the ``.gz`` extension.
+
+If we're running a different runtime, this will download a new installer / bundle for the new version. This will either be an ``.exe``, ``.dmg`` or ``.tar.gz``. Use your own ``getUpdateUrl`` to modify this, for example if you want to use ``.deb`` for Linux.
 
 
 ## Difference to Squirrel, Electron's default auto-updater

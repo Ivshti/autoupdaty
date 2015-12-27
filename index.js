@@ -60,9 +60,7 @@ module.exports = function autoUpdater (options) {
   this.prepare = function (version, cb) {
     var isAsarUpdate = version[options.runtimeVerProp] === options.version[options.runtimeVerProp]
     var updateUrl = options.getUpdateUrl(options.downloadUrl, version, isAsarUpdate ? 'asar' : process.platform)
-    var saveTo = path.join(os.tmpdir(), path.basename(updateUrl))
-
-    console.log(isAsarUpdate, updateUrl, saveTo)
+    var saveTo = path.join(os.tmpdir(), path.basename(updateUrl, isAsarUpdate ? '.gz' : undefined))
 
     var hash = crypto.createHash('sha256')
     var downloaded = 0
@@ -83,7 +81,11 @@ module.exports = function autoUpdater (options) {
             hash.update(d)
           })
 
-          pump(stream, gunzip(), fs.createWriteStream(saveTo), function (err) { next(err) })
+          if (isAsarUpdate && updateUrl.match('.gz$')) {
+            pump(stream, gunzip(), fs.createWriteStream(saveTo), function (err) { next(err) })
+          } else {
+            pump(stream, fs.createWriteStream(saveTo), function (err) { next(err) })
+          }
         })
       },
       checksum: function (next) {
