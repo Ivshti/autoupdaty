@@ -36,7 +36,7 @@ function(ver) { return !ver.isBeta }
 
 ``getUpdateUrl`` - function to format the URL we get the new version from; arguments are ``getUpdateUrl(downloadUrl, isAsar, platform)``
 
-``runtimeVersionProp`` - property to use when parsing runtime version from the versions manifest; default is ``runtimeVersion``
+``runtimeVerProp`` - property to use when parsing runtime version from the versions manifest; default is ``runtimeVersion``
 
 
 ### Versions manifest

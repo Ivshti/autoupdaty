@@ -1,5 +1,11 @@
 var needle = require('needle')
 var async = require('async')
+var path = require('path')
+var os = require('os')
+var crypto = require('crypto')
+var pump = require('pump')
+var gunzip = require('gunzip-maybe')
+var fs = require('fs')
 
 var reqOpts = { follow_max: 3, open_timeout: 5000, read_timeout: 5000 }
 
@@ -10,6 +16,15 @@ module.exports = function autoUpdater (options) {
   if (!options.manifestUrl || !options.downloadUrl) throw new Error('specify manifestUrl and downloadUrl')
 
   options.filter = options.filter || function (ver) { return !(ver.beta || ver.alpha || ver.experimental) && !ver.disabled }
+  options.getUpdateUrl = options.getUpdateUrl || function (downloadUrl, version, platform) {
+    return downloadUrl + version.version + ({
+      asar: '.asar.gz',
+      win32: '.exe',
+      darwin: '.dmg',
+      linux: '.tar.gz'
+    })[platform]
+  }
+  options.runtimeVerProp = options.runtimeVerProp || 'runtimeVersion'
 
   this.manifest = function (cb) {
     var err, body
@@ -43,5 +58,43 @@ module.exports = function autoUpdater (options) {
   }
 
   this.prepare = function (version, cb) {
+    var isAsarUpdate = version[options.runtimeVerProp] === options.version[options.runtimeVerProp]
+    var updateUrl = options.getUpdateUrl(options.downloadUrl, version, isAsarUpdate ? 'asar' : process.platform)
+    var saveTo = path.join(os.tmpdir(), path.basename(updateUrl))
+
+    console.log(isAsarUpdate, updateUrl, saveTo)
+
+    var hash = crypto.createHash('sha256')
+    var downloaded = 0
+
+    async.auto({
+      download: function (next) {
+        var stream = needle.get(updateUrl, { follow_max: 3 })
+        stream.on('error', next)
+        stream.on('headers', function () {
+          var res = stream.request.res
+          if (!res) return next(new Error('no res'))
+          if (res.statusCode !== 200) return next(new Error('downloading returned ' + res.statusCode))
+
+          res.on('error', next)
+
+          res.on('data', function (d) {
+            downloaded += d.length
+            hash.update(d)
+          })
+
+          pump(stream, gunzip(), fs.createWriteStream(saveTo), function (err) { next(err) })
+        })
+      },
+      checksum: function (next) {
+        needle.get(updateUrl + '.sha256', { follow_max: 3 }, function (err, resp, body) { next(err, body) })
+      },
+      verify: ['download', 'checksum', function (next, res) {
+        if (res.checksum.toString() !== hash.digest('hex')) return next(new Error('checksum verification failed'))
+        next()
+      }]
+    }, function (err) {
+      cb(err, { saveTo: saveTo, updateUrl: updateUrl, isAsarUpdate: isAsarUpdate })
+    })
   }
 }
