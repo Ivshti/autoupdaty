@@ -6,6 +6,7 @@ var crypto = require('crypto')
 var pump = require('pump')
 var gunzip = require('gunzip-maybe')
 var fs = require('fs')
+var url = require('url')
 
 var reqOpts = { follow_max: 3, open_timeout: 5000, read_timeout: 5000 }
 
@@ -60,7 +61,7 @@ module.exports = function autoUpdater (options) {
   this.prepare = function (version, cb) {
     var isAsarUpdate = version[options.runtimeVerProp] === options.version[options.runtimeVerProp]
     var updateUrl = options.getUpdateUrl(options.downloadUrl, version, isAsarUpdate ? 'asar' : process.platform)
-    var saveTo = path.join(os.tmpdir(), path.basename(updateUrl, isAsarUpdate ? '.gz' : undefined))
+    var saveTo = path.join(os.tmpdir(), path.basename(decodeURIComponent(url.parse(updateUrl).pathname), isAsarUpdate ? '.gz' : undefined))
 
     var hash = crypto.createHash('sha256')
     var downloaded = 0
