@@ -91,7 +91,11 @@ module.exports = function autoUpdater (options) {
         })
       },
       checksum: function (next) {
-        needle.get(updateUrl + '.sha256', { follow_max: 3 }, function (err, resp, body) { next(err, body) })
+        needle.get(updateUrl + '.sha256', { follow_max: 3 }, function (err, resp, body) {
+          if (err) return next(err)
+          if (resp.statusCode !== 200) return next(new Error('checksum status code ' + resp.statusCode))
+          next(null, body)
+        })
       },
       verify: ['download', 'checksum', function (next, res) {
         if (res.checksum.toString() !== hash.digest('hex')) return next(new Error('checksum verification failed'))
