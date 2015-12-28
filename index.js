@@ -5,13 +5,14 @@ var os = require('os')
 var crypto = require('crypto')
 var pump = require('pump')
 var gunzip = require('gunzip-maybe')
-var fs = require('fs')
 var url = require('url')
 
 var reqOpts = { follow_max: 3, open_timeout: 5000, read_timeout: 5000 }
 
 module.exports = function autoUpdater (options) {
   options = this.options = options || { }
+
+  var fs = options.fs || require('fs')
 
   if (!options.version) throw new Error('specify current version object')
   if (!options.manifestUrl || !options.downloadUrl) throw new Error('specify manifestUrl and downloadUrl')

@@ -29,6 +29,8 @@ In our versions manifest, we specify ``runtimeVersion`` for every version. If th
 
 ``filter`` - filter function ran against every version from the manifest
 
+``fs`` - your own fs object; for example, for Electron apps use ``requre('original-fs')``
+
 **Example**
 ```javascript
 function(ver) { return !ver.isBeta }
