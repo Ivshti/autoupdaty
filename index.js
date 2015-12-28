@@ -58,9 +58,12 @@ module.exports = function autoUpdater (options) {
     })
   }
 
-  this.prepare = function (version, cb) {
+  this.prepare = function (version, opts, cb) {
+    cb = typeof (opts) === 'function' ? opts : cb
+    opts = typeof (opts) === 'function' ? { } : opts
+
     var isAsarUpdate = version[options.runtimeVerProp] === options.version[options.runtimeVerProp]
-    var updateUrl = options.getUpdateUrl(options.downloadUrl, version, isAsarUpdate ? 'asar' : process.platform)
+    var updateUrl = options.getUpdateUrl(options.downloadUrl, version, opts.platform || (isAsarUpdate ? 'asar' : process.platform))
     var saveTo = path.join(os.tmpdir(), path.basename(decodeURIComponent(url.parse(updateUrl).pathname), isAsarUpdate ? '.gz' : undefined))
 
     var hash = crypto.createHash('sha256')
