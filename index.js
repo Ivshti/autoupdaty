@@ -67,6 +67,7 @@ module.exports = function autoUpdater (options) {
     var saveTo = path.join(os.tmpdir(), path.basename(decodeURIComponent(url.parse(updateUrl).pathname), isAsarUpdate ? '.gz' : undefined))
 
     var hash = crypto.createHash('sha256')
+    // var verify = crypto.createVerify('DSA-SHA1')
 
     async.auto({
       download: function (next) {
@@ -98,6 +99,7 @@ module.exports = function autoUpdater (options) {
         })
       },
       verify: ['download', 'checksum', function (next, res) {
+        // if ( ! verify.verify(options.publicKey, signature, 'base64') return next(new Error('signing verification failed'))
         if (res.checksum.toString() !== hash.digest('hex')) return next(new Error('checksum verification failed'))
         next()
       }]
