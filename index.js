@@ -67,7 +67,6 @@ module.exports = function autoUpdater (options) {
     var saveTo = path.join(os.tmpdir(), path.basename(decodeURIComponent(url.parse(updateUrl).pathname), isAsarUpdate ? '.gz' : undefined))
 
     var hash = crypto.createHash('sha256')
-    var downloaded = 0
 
     async.auto({
       download: function (next) {
@@ -78,12 +77,11 @@ module.exports = function autoUpdater (options) {
           if (!res) return next(new Error('no res'))
           if (res.statusCode !== 200) return next(new Error('downloading returned ' + res.statusCode))
 
+          // Consider using res.headers for verifying content-length and content-disposition for saveTo
+
           res.on('error', next)
 
-          res.on('data', function (d) {
-            downloaded += d.length
-            hash.update(d)
-          })
+          res.on('data', function (d) { hash.update(d) })
 
           if (isAsarUpdate && updateUrl.match('.gz$')) {
             pump(stream, gunzip(), fs.createWriteStream(saveTo), function (err) { next(err) })
