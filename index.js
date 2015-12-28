@@ -71,7 +71,7 @@ module.exports = function autoUpdater (options) {
 
     async.auto({
       download: function (next) {
-        var stream = needle.get(updateUrl, { follow_max: 3 })
+        var stream = needle.get(updateUrl, { follow_max: 3, headers: opts.headers })
         stream.on('error', next)
         stream.on('headers', function () {
           var res = stream.request.res

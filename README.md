@@ -56,7 +56,7 @@ The required properties are ``version``, ``runtimeVersion`` and ``released``. Ot
 
 ``autoupdater.check(cb)`` - checks for new versions
 
-``autoupdater.prepare(version, cb)`` - prepares a new version
+``autoupdater.prepare(version, [ options , ] cb)`` - prepares a new version
 
 This downloads the new version. 
 
