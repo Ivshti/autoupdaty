@@ -104,7 +104,7 @@ module.exports = function autoUpdater (options) {
         next()
       }]
     }, function (err) {
-      cb(err, { saveTo: saveTo, updateUrl: updateUrl, isAsarUpdate: isAsarUpdate })
+      cb(err, { saveTo: saveTo, updateUrl: updateUrl, isAsarUpdate: isAsarUpdate, version: version })
     })
   }
 }
