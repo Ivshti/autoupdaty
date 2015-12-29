@@ -1,6 +1,6 @@
 {
   "name": "autoupdaty",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Autoupdater for Electron/NW.js apps",
   "main": "index.js",
   "scripts": {
