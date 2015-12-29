@@ -126,15 +126,12 @@ tape('update to new version - full update with untaring', function (t) {
 
       if (platform == 'win32') return { url: downloadUrl + '%20' + version.version + '.exe' }
 
-      var dest = 'Stremio'
-      if (platform == 'asar') dest = null // default
-      if (platform == 'darwin') dest = 'Stremio.app'
       return { url: downloadUrl + (platform == 'win32' ? '%20' : '') + version.version + ({
           asar: '.asar.gz',
           win32: '.win.gz',
           darwin: '.mac.gz',
           linux: '.linux.tar.gz'
-        })[platform], ungzip: true, untar: platform !== 'asar', dest: dest }
+        })[platform], ungzip: true, untar: platform !== 'asar' }
     }
   })
 
