@@ -8,10 +8,11 @@ tape('check for new version', function (t) {
     version: { version: '3.4.4', stremioRuntimeVersion: '3.2' } 
   })
 
-  updater.check(function (err, newVersion) {
+  updater.check(function (err, newVersion, manifest) {
     t.error(err, 'no error')
     t.ok(newVersion, 'has new version object')
     t.ok(newVersion && newVersion.version, 'has new version code')
+    t.ok(Array.isArray(manifest), 'passes manifest')
     t.end()
   })
 })
@@ -122,6 +123,9 @@ tape('update to new version - full update with untaring', function (t) {
     version: { version: '3.0.0', stremioRuntimeVersion: '3.0' },
     getUpdateUrl: function (downloadUrl, version, platform) {
       platform = 'linux' // force platform
+
+      if (platform == 'win32') return { url: downloadUrl + '%20' + version.version + '.exe' }
+
       var dest = 'Stremio'
       if (platform == 'asar') dest = null // default
       if (platform == 'darwin') dest = 'Stremio.app'

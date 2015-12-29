@@ -56,7 +56,7 @@ module.exports = function autoUpdater (options) {
         .filter(options.filter)
 
       var newest = versions[0]
-      cb(null, newest.version === options.version.version ? null : newest)
+      cb(null, newest.version === options.version.version ? null : newest, body)
     })
   }
 
