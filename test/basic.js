@@ -1,4 +1,5 @@
 var tape = require('tape')
+var fs = require('fs')
 var autoUpdater = require('..')
 
 tape('check for new version', function (t) {
@@ -110,6 +111,44 @@ tape('update to new version - full update', function (t) {
       t.ok(!res.isAsarUpdate, 'is not asar update')
       t.ok(res.saveTo.match('.dmg$') || res.saveTo.match('.exe$') || res.saveTo.match('.tar.gz$'), 'downloaded full installer/bundle')
       t.end()
+    })
+  })
+})
+
+tape('update to new version - full update with untaring', function (t) {
+  var updater = new autoUpdater({ 
+    manifestUrl: 'http://www.strem.io/stremioVersions.json', downloadUrl: 'http://dl.strem.io/Stremio',
+    runtimeVerProp: 'stremioRuntimeVersion',
+    version: { version: '3.0.0', stremioRuntimeVersion: '3.0' },
+    getUpdateUrl: function (downloadUrl, version, platform) {
+      platform = 'linux' // force platform
+      var dest = 'Stremio'
+      if (platform == 'asar') dest = null // default
+      if (platform == 'darwin') dest = 'Stremio.app'
+      return { url: downloadUrl + (platform == 'win32' ? '%20' : '') + version.version + ({
+          asar: '.asar.gz',
+          win32: '.win.gz',
+          darwin: '.mac.gz',
+          linux: '.linux.tar.gz'
+        })[platform], ungzip: true, untar: platform !== 'asar', dest: dest }
+    }
+  })
+
+  updater.check(function (err, newVersion) {
+    t.error(err, 'has error')
+    t.ok(newVersion, 'has new version object')
+    t.ok(newVersion && newVersion.version, 'has new version code')
+
+    updater.prepare(newVersion, function (err, res) {
+      t.error(err, 'has error')
+      t.ok(!res.isAsarUpdate, 'is not asar update')
+
+      fs.stat(res.saveTo, function (err, stat) {
+        t.error(err, 'has error')
+        t.ok(stat, 'destination exists')
+        t.ok(stat.isDirectory(), 'downloaded full app in a dir')
+        t.end()
+      })
     })
   })
 })
