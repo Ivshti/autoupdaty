@@ -1,6 +1,6 @@
 {
   "name": "autoupdaty",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Autoupdater for Electron/NW.js apps",
   "main": "index.js",
   "scripts": {
@@ -29,6 +29,5 @@
   "devDependencies": {
     "tape": "^4.4.0",
     "standard": "^5.4.1"
-
   }
 }
