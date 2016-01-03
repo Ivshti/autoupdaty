@@ -1,6 +1,6 @@
 {
   "name": "autoupdaty",
-  "version": "1.0.4",
+  "version": "1.1.1",
   "description": "Autoupdater for Electron/NW.js apps",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,8 @@
     "async": "^1.5.0",
     "gunzip-maybe": "^1.2.1",
     "needle": "^0.11.0",
-    "pump": "^1.0.1"
+    "pump": "^1.0.1",
+    "tar-fs": "^1.9.0"
   },
   "devDependencies": {
     "tape": "^4.4.0",
