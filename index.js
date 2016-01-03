@@ -66,6 +66,7 @@ module.exports = function autoUpdater (options) {
 
     var isAsarUpdate = version[options.runtimeVerProp] === options.version[options.runtimeVerProp]
     var update = options.getUpdateUrl(options.downloadUrl, version, opts.platform || (isAsarUpdate ? 'asar' : process.platform))
+    if (!update) return cb(new Error('getUpdateUrl returned no result'))
     update = typeof (update) === 'string' ? { url: update } : update
     update.ungzip = update.hasOwnProperty('ungzip') ? update.ungzip : (isAsarUpdate && update.url.match('.gz$'))
     update.untar = update.hasOwnProperty('untar') ? update.untar : false
