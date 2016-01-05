@@ -101,7 +101,7 @@ module.exports = function autoUpdater (options) {
         })
       },
       checksum: function (next) {
-        needle.get(update.checksumUrl || (update.url + '.sha256'), { follow_max: 3 }, function (err, resp, body) {
+        needle.get(update.checksumUrl || (update.url.split('?')[0] + '.sha256'), { follow_max: 3 }, function (err, resp, body) {
           if (err) return next(err)
           if (resp.statusCode !== 200) return next(new Error('checksum status code ' + resp.statusCode))
           next(null, body)
