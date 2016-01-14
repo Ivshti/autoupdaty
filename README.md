@@ -75,4 +75,4 @@ If we're running a different runtime, this will download a new installer / bundl
 
 This was built primarily for in-house use for NW.js. It isn't documented perfectly and developed for generic use cases, so please use Electron's auto-updater unless you're very brave.
 
-The reason to use `autoupdaty`, if it was a bit more mature, would be that it's incredibly simple and doesn't require any external dependencies (such as Squirrel's .NET). 
+The reason to use `autoupdaty`, if it was a bit more mature, would be that it's incredibly simple and doesn't require any external dependencies (such as Squirrel's .NET). In other words, if you're looking for something simpler, more hackable and obvious in the way it works.
