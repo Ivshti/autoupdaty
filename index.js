@@ -107,12 +107,13 @@ module.exports = function autoUpdater (options) {
         needle.get(update.checksumUrl || (update.url.split('?')[0] + '.sha256'), { follow_max: 3 }, function (err, resp, body) {
           if (err) return next(err)
           if (resp.statusCode !== 200) return next(new Error('checksum status code ' + resp.statusCode))
-          next(null, body)
+          next(null, body ? body.toString() : null)
         })
       },
       verify: ['download', 'checksum', function (next, res) {
         // if ( ! verify.verify(options.publicKey, signature, 'base64') return next(new Error('signing verification failed'))
-        if (res.checksum && res.checksum.toString() !== hash.digest('hex')) return next(new Error('checksum verification failed'))
+        var downloadedHash = hash.digest('hex')
+        if (res.checksum && res.checksum !== downloadedHash) return next(new Error('checksum verification failed, we have: ' + downloadedHash + ' but expecting ' + res.checksum))
         if (len === 0) return next(new Error('empty file'))
         next()
       }]
