@@ -113,6 +113,7 @@ module.exports = function autoUpdater (options) {
       verify: ['download', 'checksum', function (next, res) {
         // if ( ! verify.verify(options.publicKey, signature, 'base64') return next(new Error('signing verification failed'))
         if (res.checksum && res.checksum.toString() !== hash.digest('hex')) return next(new Error('checksum verification failed'))
+        if (len === 0) return next(new Error('empty file'))
         next()
       }]
     }, function (err) {
