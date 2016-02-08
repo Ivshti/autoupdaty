@@ -74,6 +74,7 @@ module.exports = function autoUpdater (options) {
     var saveTo = path.join(os.tmpdir(), update.dest || path.basename(decodeURIComponent(url.parse(update.url).pathname), isAsarUpdate ? '.gz' : undefined))
 
     var hash = crypto.createHash('sha256')
+    var len = 0
     // var verify = crypto.createVerify('DSA-SHA1')
 
     async.auto({
@@ -89,7 +90,7 @@ module.exports = function autoUpdater (options) {
 
           res.on('error', next)
 
-          res.on('data', function (d) { hash.update(d) })
+          res.on('data', function (d) { len += d.length; hash.update(d) })
 
           var pipes = [stream]
           if (update.ungzip) pipes.push(gunzip())
@@ -101,8 +102,8 @@ module.exports = function autoUpdater (options) {
         })
       },
       checksum: function (next) {
-        if (update.checksumSkip) return next();
-        
+        if (update.checksumSkip) return next()
+
         needle.get(update.checksumUrl || (update.url.split('?')[0] + '.sha256'), { follow_max: 3 }, function (err, resp, body) {
           if (err) return next(err)
           if (resp.statusCode !== 200) return next(new Error('checksum status code ' + resp.statusCode))
