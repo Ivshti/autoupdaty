@@ -68,14 +68,14 @@ tape('update to new version via asar', function (t) {
   var updater = new autoUpdater({ 
     manifestUrl: 'http://www.strem.io/stremioVersions.json', downloadUrl: 'http://dl.strem.io/Stremio',
     runtimeVerProp: 'stremioRuntimeVersion',
-    version: { version: '3.4.4', stremioRuntimeVersion: '3.1' } 
+    version: { version: '3.5.4', stremioRuntimeVersion: '3.5' } 
   })
 
   updater.check(function (err, newVersion) {
     t.error(err, 'no error')
     t.ok(newVersion, 'has new version object')
     t.ok(newVersion && newVersion.version, 'has new version code')
-    t.ok(newVersion.stremioRuntimeVersion === '3.1', 'asar only update')
+    t.ok(newVersion.stremioRuntimeVersion === '3.5', 'asar only update')
 
     updater.prepare(newVersion, function (err, res) {
       t.error(err, 'no error')
