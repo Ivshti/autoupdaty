@@ -8,7 +8,7 @@ var gunzip = require('gunzip-maybe')
 var url = require('url')
 var tar = require('tar-fs')
 
-var reqOpts = { follow_max: 3, open_timeout: 5000, read_timeout: 5000 }
+var reqOpts = { follow_max: 5, open_timeout: 5000, read_timeout: 5000 }
 
 module.exports = function autoUpdater (options) {
   options = this.options = options || { }
