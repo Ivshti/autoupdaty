@@ -71,7 +71,7 @@ module.exports = function autoUpdater (options) {
     update.ungzip = update.hasOwnProperty('ungzip') ? update.ungzip : (isAsarUpdate && update.url.match('.gz$'))
     update.untar = update.hasOwnProperty('untar') ? update.untar : false
 
-    var saveTo = path.join(os.tmpdir(), update.dest || path.basename(decodeURIComponent(url.parse(update.url).pathname), isAsarUpdate ? '.gz' : undefined))
+    var saveTo = path.join(options.tmpdir || os.tmpdir(), update.dest || path.basename(decodeURIComponent(url.parse(update.url).pathname), isAsarUpdate ? '.gz' : undefined))
 
     var hash = crypto.createHash('sha256')
     var len = 0
